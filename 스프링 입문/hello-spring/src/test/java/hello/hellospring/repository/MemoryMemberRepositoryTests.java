@@ -24,7 +24,7 @@ class MemoryMemberRepositoryTests {
     public void save(){
 
         Member member = new Member();
-        member.setName("spring");
+        member.setName("hello");
 
         repository.save(member);
 

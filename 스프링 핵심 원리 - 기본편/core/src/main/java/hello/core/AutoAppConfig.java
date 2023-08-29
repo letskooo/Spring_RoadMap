@@ -6,7 +6,9 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Component;
 
 @Configuration
-@ComponentScan(excludeFilters = @ComponentScan.Filter(type= FilterType.ANNOTATION, classes = Configuration.class))
+@ComponentScan(
+        basePackages = "hello.core.member",
+        excludeFilters = @ComponentScan.Filter(type= FilterType.ANNOTATION, classes = Configuration.class))
 public class AutoAppConfig {
 
 

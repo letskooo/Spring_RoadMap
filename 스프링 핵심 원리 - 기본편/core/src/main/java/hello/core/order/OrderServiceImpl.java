@@ -5,27 +5,21 @@ import hello.core.member.Member;
 import hello.core.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService{
 
     private final MemberRepository memberRepository;
     private final DiscountPolicy discountPolicy;
 
-    // @RequiredArgsConstructor가 생성
-//    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
-//
-//        this.discountPolicy = discountPolicy;
-//        this.memberRepository = memberRepository;
-//    }
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
 
-//    @Autowired
-//    public void init(MemberRepository memberRepository, DiscountPolicy discountPolicy){
-//        this.memberRepository = memberRepository;
-//        this.discountPolicy = discountPolicy;
-//    }
+        this.discountPolicy = discountPolicy;
+        this.memberRepository = memberRepository;
+    }
+
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {

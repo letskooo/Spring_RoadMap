@@ -17,15 +17,11 @@ public class JpaMain {
 
         try {
 
-            // 비영속
-            Member member = new Member();
-            member.setId(100L);
-            member.setName("HelloJPA");
+            Member member = em.find(Member.class, 150L);
+            member.setName("ZZZZ");
 
-            // 영속
-            System.out.println("====BEFORE====");
-            em.persist(member); // em 안에 있는 영속성 컨텍스트를 통해 이 엔티티가 관리됨
-            System.out.println("====AFTER====");
+            System.out.println("====================");
+
             tx.commit();  // 트랜잭션 커밋
         } catch (Exception e){
             tx.rollback();

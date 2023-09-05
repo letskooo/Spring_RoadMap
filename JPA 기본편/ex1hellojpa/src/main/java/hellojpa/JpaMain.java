@@ -17,13 +17,15 @@ public class JpaMain {
 
         try {
 
-//            Member findMember = em.find(Member.class, 1L);
-            List<Member> result = em.createQuery("select m from Member as m", Member.class).getResultList();
+            // 비영속
+            Member member = new Member();
+            member.setId(100L);
+            member.setName("HelloJPA");
 
-            for (Member member: result){
-                System.out.println("member.name = " + member.getName());
-            }
-
+            // 영속
+            System.out.println("====BEFORE====");
+            em.persist(member); // em 안에 있는 영속성 컨텍스트를 통해 이 엔티티가 관리됨
+            System.out.println("====AFTER====");
             tx.commit();  // 트랜잭션 커밋
         } catch (Exception e){
             tx.rollback();

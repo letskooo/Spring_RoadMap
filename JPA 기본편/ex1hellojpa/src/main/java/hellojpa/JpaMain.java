@@ -17,12 +17,12 @@ public class JpaMain {
 
         try {
 
-            Member member = em.find(Member.class, 150L);
-            member.setName("AAAA");
+            Member member = new Member();
+            member.setUsername("C");
 
-            em.clear();
-            Member member2 = em.find(Member.class, 150L);
-
+            System.out.println("====================");
+            em.persist(member);
+            System.out.println("member.id = " + member.getId());
             System.out.println("====================");
 
             tx.commit();  // 트랜잭션 커밋

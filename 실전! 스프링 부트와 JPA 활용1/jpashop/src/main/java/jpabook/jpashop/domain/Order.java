@@ -44,10 +44,12 @@ public class Order {
         member.getOrders().add(this);
     }
 
+    // 연관관계 편의 메소드
     public void addOrderItem(OrderItem orderItem){
         orderItems.add(orderItem);
         orderItem.setOrder(this);
     }
+    // 연관관계 편의 메소드
     public void setDelivery(Delivery delivery){
         this.delivery = delivery;
         delivery.setOrder(this);

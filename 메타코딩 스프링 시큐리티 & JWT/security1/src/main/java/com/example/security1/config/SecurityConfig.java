@@ -30,12 +30,14 @@ public class SecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/user/**").authenticated()
+                        .requestMatchers("/user/**").authenticated() // 인증만 되면 들어갈 수 있는 주소
                         .requestMatchers("/manager/**").hasAnyRole("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
                         .requestMatchers("/admin/**").hasAnyRole("hasRole('ROLE_ADMIN')")
                         .anyRequest().permitAll());
         http.formLogin(requests ->
-                requests.loginPage("/loginForm"));
+                requests.loginPage("/loginForm")    // 로그인 페이지를 불러올 때는 이 메소드를 호출
+                        .loginProcessingUrl("/login")   // 시큐리티가 /login 요청이 오면 낚아챔.
+                        .defaultSuccessUrl("/"));   // 로그인이 성공하면 다음 url로 리다이렉트
 
         return http.build();
 

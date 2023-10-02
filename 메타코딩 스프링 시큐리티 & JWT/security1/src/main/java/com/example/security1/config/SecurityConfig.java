@@ -3,6 +3,8 @@ package com.example.security1.config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity // 스프링 시큐리티 활성화. 스프링 시큐리티 필터가 스프링 필터체인에 등록됨.
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)    // secured 어노테이션 활성
 @Slf4j
 public class SecurityConfig {
 
@@ -30,9 +33,9 @@ public class SecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/user/**").authenticated() // 인증만 되면 들어갈 수 있는 주소
-                        .requestMatchers("/manager/**").hasAnyRole("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
-                        .requestMatchers("/admin/**").hasAnyRole("hasRole('ROLE_ADMIN')")
+                        .requestMatchers("/user/**").authenticated()  // 인증만 되면 들어갈 수 있는 주소!
+                        .requestMatchers("/manager/**").hasAnyRole("MANAGER", "ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll());
         http.formLogin(requests ->
                 requests.loginPage("/loginForm")    // 로그인 페이지를 불러올 때는 이 메소드를 호출

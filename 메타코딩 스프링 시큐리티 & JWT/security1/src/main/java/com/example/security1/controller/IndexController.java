@@ -1,12 +1,22 @@
 package com.example.security1.controller;
 
+import com.example.security1.Model.User;
+import com.example.security1.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Controller
+@RequiredArgsConstructor
 public class IndexController {
+
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     // localhost:8080/
     // localhost:8080
@@ -28,18 +38,31 @@ public class IndexController {
     public String manager(){
         return "manager";
     }
-    @GetMapping("/join")
-    public String join(){
-        return "join";
+
+    @PostMapping("/join")
+    public String join(User user){
+        System.out.println(user);
+
+        user.setRole("ROLE_USER");
+
+        String rawPassword = user.getPassword();
+        String encodePassword = passwordEncoder.encode(rawPassword);
+
+        user.setPassword(encodePassword);
+
+        userRepository.save(user);
+
+        return "redirect:/loginForm";
     }
-    @GetMapping("/login")
-    @ResponseBody
-    public String login(){
-        return "login";
+
+
+    @GetMapping("/loginForm")
+    public String loginForm(){
+        return "loginForm";
     }
-    @GetMapping("/joinProc")
-    @ResponseBody
-    public String joinProc(){
-        return "회원가입 완료됨";
+
+    @GetMapping("/joinForm")
+    public String joinForm(){
+        return "joinForm";
     }
 }

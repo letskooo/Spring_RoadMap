@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -15,6 +17,11 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @EnableWebSecurity // 스프링 시큐리티 활성화. 스프링 시큐리티 필터가 스프링 필터체인에 등록됨.
 @Slf4j
 public class SecurityConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
@@ -28,8 +35,8 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasAnyRole("hasRole('ROLE_ADMIN')")
                         .anyRequest().permitAll());
         http.formLogin(requests ->
-                requests.loginPage("/login"));
-        
+                requests.loginPage("/loginForm"));
+
         return http.build();
 
     }

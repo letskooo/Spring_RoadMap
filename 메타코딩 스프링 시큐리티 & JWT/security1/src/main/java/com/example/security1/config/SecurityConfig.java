@@ -37,10 +37,13 @@ public class SecurityConfig {
                         .requestMatchers("/manager/**").hasAnyRole("MANAGER", "ADMIN")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll());
-        http.formLogin(requests ->
-                requests.loginPage("/loginForm")    // 로그인 페이지를 불러올 때는 이 메소드를 호출
-                        .loginProcessingUrl("/login")   // 시큐리티가 /login 요청이 오면 낚아챔.
+        http.formLogin(requests -> requests
+                        .loginPage("/loginForm")    // 로그인 페이지를 불러올 때는 이 메소드를 호출
+                        .loginProcessingUrl("/login")   // 시큐리티가 /login POST 요청이 오면 낚아챔.
                         .defaultSuccessUrl("/"));   // 로그인이 성공하면 다음 url로 리다이렉트
+
+        http.oauth2Login(requests -> requests
+                        .loginPage("/loginForm"));
 
         return http.build();
 

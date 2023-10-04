@@ -1,8 +1,11 @@
 package com.example.security1.config;
 
+import com.example.security1.config.oauth.PrincipalOauth2UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,7 +22,10 @@ import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 @EnableWebSecurity // 스프링 시큐리티 활성화. 스프링 시큐리티 필터가 스프링 필터체인에 등록됨.
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)    // secured 어노테이션 활성
 @Slf4j
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final PrincipalOauth2UserService principalOauth2UserService;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -42,8 +48,10 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")   // 시큐리티가 /login POST 요청이 오면 낚아챔.
                         .defaultSuccessUrl("/"));   // 로그인이 성공하면 다음 url로 리다이렉트
 
-        http.oauth2Login(requests -> requests
-                        .loginPage("/loginForm"));
+        http.oauth2Login(oauth2 -> oauth2
+                        .loginPage("/loginForm")
+                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                                .userService(principalOauth2UserService)));
 
         return http.build();
 

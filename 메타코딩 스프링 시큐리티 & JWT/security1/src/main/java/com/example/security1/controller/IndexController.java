@@ -49,6 +49,9 @@ public class IndexController {
         return "OAuth 세션 정보 확인하기";
     }
 
+
+
+
     // localhost:8080/
     // localhost:8080
     @GetMapping({"", "/"})
@@ -56,9 +59,13 @@ public class IndexController {
         return "index";
     }
 
+    // 일반 로그인을 하던, OAuth2 로그인을 하던 PrincipalDetails 타입으로 받을 수 있음
     @GetMapping("/user")
     @ResponseBody
-    public String user(){
+    public String user(@AuthenticationPrincipal PrincipalDetails principalDetails){
+
+        log.info("principalDetails={}", principalDetails.getUser());
+
         return "user";
     }
 

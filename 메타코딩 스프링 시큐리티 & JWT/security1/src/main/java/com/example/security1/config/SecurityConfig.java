@@ -28,11 +28,6 @@ public class SecurityConfig {
     private final PrincipalOauth2UserService principalOauth2UserService;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
 
         log.info("----------configure--------------");
@@ -51,6 +46,7 @@ public class SecurityConfig {
         http.oauth2Login(oauth2 -> oauth2
                         .loginPage("/loginForm")
                         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                                // 구글로부터 받은 userRequest 데이터에 대한 후처리되는 함수
                                 .userService(principalOauth2UserService)));
 
         return http.build();

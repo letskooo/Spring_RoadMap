@@ -49,6 +49,8 @@ public class SecurityConfig {
                                 // 구글로부터 받은 userRequest 데이터에 대한 후처리되는 함수
                                 .userService(principalOauth2UserService)));
 
+
+
         return http.build();
 
     }

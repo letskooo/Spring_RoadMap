@@ -1,13 +1,21 @@
 package com.example.jwt.config.jwt;
 
+import com.example.jwt.config.auth.PrincipalDetails;
+import com.example.jwt.model.APIUser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import java.io.BufferedReader;
+import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,6 +38,27 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         log.info("trying login....");
 
-        return super.attemptAuthentication(request, response);
+        try {
+
+            ObjectMapper om = new ObjectMapper();
+            APIUser apiUser = om.readValue(request.getInputStream(), APIUser.class);
+            System.out.println(apiUser);
+
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(apiUser.getUsername(), apiUser.getPassword());
+
+            Authentication authentication =
+                    authenticationManager.authenticate(authenticationToken);
+
+            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            System.out.println(principalDetails.getUsername());
+
+            return authentication;
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

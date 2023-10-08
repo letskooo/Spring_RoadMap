@@ -25,13 +25,7 @@ import org.springframework.web.filter.CorsFilter;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CorsFilter corsFilter;
-    private final PrincipalDetailsService principalDetailsService;
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+    private final CorsConfig corsConfig;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -45,8 +39,8 @@ public class SecurityConfig {
 
         AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
 
-        http.addFilter(corsFilter)
-                .addFilter(new JwtAuthenticationFilter(authenticationManager));
+//        http.addFilter(corsFilter)
+//                .addFilter(new JwtAuthenticationFilter(authenticationManager));
 
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers("/api/v1/user/**").hasAnyRole("USER", "MANAGER", "ADMIN")
@@ -57,5 +51,17 @@ public class SecurityConfig {
         http.addFilterBefore(new MyFilter3(), SecurityContextPersistenceFilter.class);
 
         return http.build();
+    }
+
+    public class MyCustomDsl extends AbstractHttpConfigurer<MyCustomDsl, HttpSecurity> {
+
+        @Override
+        public void configure(HttpSecurity http) throws Exception {
+            AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
+
+            http
+                    .addFilter(corsConfig.corsFilter())
+                    .addFilter(new JwtAuthenticationFilter(authenticationManager));
+        }
     }
 }

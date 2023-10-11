@@ -22,12 +22,16 @@ public class OrderRepository {
         return em.find(Order.class, id);
     }
 
-     public List<Order> findAll(OrderSearch orderSearch){
+    public List<Order> findAll(){
+        return em.createQuery("select o from Order o", Order.class).getResultList();
+    }
+
+     public List<Order> findByString(OrderSearch orderSearch){
 
          //language=JPAQL
          String jpql = "select o From Order o join o.member m";
          boolean isFirstCondition = true;
-//주문 상태 검색
+        //주문 상태 검색
          if (orderSearch.getOrderStatus() != null) {
              if (isFirstCondition) {
                  jpql += " where";
@@ -37,7 +41,7 @@ public class OrderRepository {
              }
              jpql += " o.status = :status";
          }
-//회원 이름 검색
+        //회원 이름 검색
          if (StringUtils.hasText(orderSearch.getMemberName())) {
              if (isFirstCondition) {
                  jpql += " where";

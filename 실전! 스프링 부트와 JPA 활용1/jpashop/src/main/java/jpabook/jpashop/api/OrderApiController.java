@@ -82,4 +82,14 @@ public class OrderApiController {
             count = orderItem.getCount();
         }
     }
+
+    @GetMapping("/api/v3/orders")
+    public List<OrderDTO> orderV3(){
+
+        List<Order> orders = orderRepository.findAllWithItem();
+        List<OrderDTO> result = orders.stream()
+                .map(order -> new OrderDTO(order)).collect(Collectors.toList());
+
+        return result;
+    }
 }

@@ -2,13 +2,17 @@ package jpabook.jpashop.repository.order.query;
 
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.OrderStatus;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@EqualsAndHashCode(of = "orderId")
 public class OrderQueryDTO {
 
     private Long orderId;

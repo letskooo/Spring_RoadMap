@@ -265,4 +265,33 @@ class MemberRepositoryTest {
             System.out.println("member.Team = " + member.getTeam().getName());
         }
     }
+
+    @Test
+    public void queryHint(){
+
+        // given
+        Member member1 = new Member("member1", 10);
+        memberRepository.save(member1);
+        em.flush(); // DB에 반영
+        em.clear(); // 영속성 컨텍스트 비우기
+
+        // when
+        Member findMember = memberRepository.findReadOnlyByUsername("member1");
+        findMember.setUsername("member2");
+
+        em.flush(); // 변경 감지 동작 -> update 쿼리가 나감
+    }
+
+    @Test
+    public void lock(){
+
+        // given
+        Member member1 = new Member("member1", 10);
+        memberRepository.save(member1);
+        em.flush(); // DB에 반영
+        em.clear(); // 영속성 컨텍스트 비우기
+
+        // when
+        List<Member> result = memberRepository.findLockByUsername("member1");
+    }
 }

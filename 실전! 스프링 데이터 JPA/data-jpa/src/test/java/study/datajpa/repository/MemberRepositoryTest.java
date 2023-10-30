@@ -237,4 +237,32 @@ class MemberRepositoryTest {
         // then
         Assertions.assertThat(resultCount).isEqualTo(3);
     }
+
+    @Test
+    public void findMemberLazy(){
+
+        // member1은 teamA를 참조
+        // member2는 teamB를 참조
+
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 10, teamB);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush(); // DB에 반영
+        em.clear(); // 영속성 컨텍스트 비우기
+
+        // when
+        List<Member> members = memberRepository.findAll();
+
+        for (Member member : members) {
+            System.out.println("member = " + member.getUsername());
+            System.out.println("member.Team = " + member.getTeam().getName());
+        }
+    }
 }
